@@ -39,7 +39,7 @@ jobs:
     - name: Generate build number
       uses: einaregilsson/build-number@v3
       with:
-        token: ${{secrets.API_TOKEN_GITHUB}}
+        token: ${{secrets.GITHUB_TOKEN }}
 
     - name: Print new build number
       run: echo "Build number is $BUILD_NUMBER"
@@ -49,7 +49,7 @@ jobs:
       if: always()
       with:
         status: ${{ job.status }}
-        token: ${{ secrets.API_TOKEN_GITHUB }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         notification_title: "Starting the Build"
         message_format: "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}> "
         footer: "Linked Repo <{repo_url}|{repo}> | <{workflow_url}|View Workflow>"
@@ -71,7 +71,7 @@ jobs:
       if: always()
       with:
         status: ${{ job.status }}
-        token: ${{ secrets.API_TOKEN_GITHUB }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         notification_title: "Build Status: {status_message}"
         message_format: "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>"
         footer: "Linked Repo <{repo_url}|{repo}> | <{workflow_url}|View Workflow>"
@@ -96,7 +96,7 @@ jobs:
       if: always()
       with:
         status: ${{ job.status }}
-        token: ${{ secrets.API_TOKEN_GITHUB}}
+        token: ${{ secrets.GITHUB_TOKEN}}
         notification_title: "Docker Build & Push Status: {status_message}"
         message_format: "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>"
         footer: "Linked Repo <{repo_url}|{repo}> | <{workflow_url}|View Workflow>"
@@ -117,7 +117,7 @@ jobs:
       if: always()
       with:
         status: ${{ job.status }}
-        token: ${{ secrets.API_TOKEN_GITHUB }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         notification_title: "Infra Workflow trigger Status: {status_message}"
         message_format: "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>"
         footer: "Linked Repo <{repo_url}|{repo}> | <{workflow_url}|View Workflow>"
