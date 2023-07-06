@@ -68,9 +68,10 @@ public class BookInfoService {
 			resp = objMapper.readValue(responseJson, BookInfoSearchResponse.class);
 			LOG.info("Got the response with " + resp.getTotalItems()+ " records");
 
-			for(int i=0; i<= resp.getTotalItems(); i++) {
+			for(int i=0; i < resp.getTotalItems(); i++) {
+				System.out.println("index i"+ i);
 				BookItem item = resp.getItems().get(i);
-				System.out.println("i"+" item:"+item);
+				System.out.println(i+" ==> item:"+item);
 				String itemJson = objMapper.writeValueAsString(item);
 				redisClient.set(Arrays.asList(item.getId(), itemJson));
 			}
@@ -91,7 +92,7 @@ public class BookInfoService {
 		String responseJson = "";
 		try {
 			ObjectMapper objMapper = new ObjectMapper();
-			for (int i=0; i<=bookids.size(); i++) {
+			for (int i=0; i < bookids.size(); i++) {
 
 				Response cachedItem  = redisClient.get(bookids.get(i));
 				if(cachedItem != null ) {
