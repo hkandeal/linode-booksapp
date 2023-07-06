@@ -21,7 +21,7 @@ on:
 # Environment variables available to all jobs and steps in this workflow
 env:
   REGISTRY_HOSTNAME: docker.io
-  DOCKER_USERNAME: abvijaykumar
+  DOCKER_USERNAME: hossamgbm
   IMAGE_NAME: bozo-book-info-service
   DEPLOYMENT_NAME: book-info-service-deployments
   PORT: 8080
