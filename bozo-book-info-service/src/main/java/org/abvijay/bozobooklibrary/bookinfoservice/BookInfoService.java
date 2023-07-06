@@ -68,7 +68,7 @@ public class BookInfoService {
 			resp = objMapper.readValue(responseJson, BookInfoSearchResponse.class);
 			LOG.info("Got the response with " + resp.getTotalItems()+ " records");
 
-			for(int i=0; i< resp.getTotalItems(); i++) {
+			for(int i=0; i<= resp.getTotalItems(); i++) {
 				BookItem item = resp.getItems().get(i);
 				String itemJson = objMapper.writeValueAsString(item);
 				redisClient.set(Arrays.asList(item.getId(), itemJson));
