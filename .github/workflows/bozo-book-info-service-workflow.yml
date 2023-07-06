@@ -107,7 +107,7 @@ jobs:
     - name: Invoke book-info-service Infra GitOps pipe
       run: |
           curl -H "Accept: application/vnd.github.v3+json" \
-          -H "Authorization: Bearer token ${{secrets.API_TOKEN_GITHUB }}" \
+          -H "Authorization: token ${{secrets.API_TOKEN_GITHUB }}" \
           -H "Content-Type: application/json" \
           --request POST \
           --data '{"event_type": "update-book-info-service-build-number", "client_payload": { "buildnumber": "'"$BUILD_NUMBER"'" }}' \
