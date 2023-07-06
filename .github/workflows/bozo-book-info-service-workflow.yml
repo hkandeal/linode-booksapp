@@ -107,7 +107,7 @@ jobs:
     - name: Invoke book-info-service Infra GitOps pipe
       run: |
           curl -H "Accept: application/vnd.github.everest-preview+json" \
-          -H "Authorization: token ${{secrets.API_TOKEN_GITHUB}}" \
+          -H "Authorization: token ${{secrets.GITHUB_TOKEN }}" \
           --request POST \
           --data '{"event_type": "update-book-info-service-build-number", "client_payload": { "buildnumber": "'"$BUILD_NUMBER"'" }}' \
           https://api.github.com/repos/hkandeal/linode-booksinfra/dispatches
