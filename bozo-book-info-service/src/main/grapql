@@ -1,0 +1,42 @@
+{
+  search(keyword: "java" page: 20) {
+    totalItems
+    items {
+      id
+      volumeInfo {
+        title
+        authors
+        description
+        imageLinks {
+          smallThumbnail
+          thumbnail
+        }
+      }
+    }
+  }
+}
+
+https://www.googleapis.com/books/v1/volumes?q=java&key=AIzaSyBfRCTvba9HdzeD4gUURMbEKRwNFdz7c7I&maxResults=40&startIndex=10
+
+https://bozo.hossam.io/bookinfo/q/graphql-ui/
+https://bozo.hossam.io/bookinfo/graphql/schema.graphql
+
+
+argocd pwd:COu0ryoc1lH0BkI2
+vault pwd:hvs.gGSJgN7sUYW06lvspvYy6O0t
+
+firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyCTRftAWpS4ByqSz_brMO3ipFldlR7_mcY",
+  authDomain: "bozo-book-library-1e53b.firebaseapp.com",
+  projectId: "bozo-book-library-1e53b",
+  storageBucket: "bozo-book-library-1e53b.appspot.com",
+  messagingSenderId: "37170209713",
+  appId: "1:37170209713:web:5252edb99e96f684be5390",
+  measurementId: "G-9VNTFGBH15"
+};
+
+https://console.firebase.google.com/project/bozo-book-library-1e53b/overview
+
+vault kv put bozobooks/reactjs-firebase-config apiKey="AIzaSyCTRftAWpS4ByqSz_brMO3ipFldlR7_mcY" messagingSenderId="37170209713" appId="1:37170209713:web:5252edb99e96f684be5390" measurementId="G-9VNTFGBH15" 
+
