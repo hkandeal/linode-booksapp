@@ -34,5 +34,10 @@ public class BookItem {
         this.id = id;
     }
 
+    @Override
+    public String toString() {
+        return "BookItem [kind=" + kind + ", id=" + id + ", volumeInfo=" + volumeInfo + "]";
+    }
+
 
 }

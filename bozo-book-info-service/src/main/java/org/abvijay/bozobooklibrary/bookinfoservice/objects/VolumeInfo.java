@@ -89,5 +89,12 @@ public class VolumeInfo {
         this.language = language;
     }
 
+    @Override
+    public String toString() {
+        return "VolumeInfo [title=" + title + ", description=" + description + ", authors=" + authors
+                + ", publishedDate=" + publishedDate + ", publisher=" + publisher + ", averageRating=" + averageRating
+                + ", ratingsCount=" + ratingsCount + ", imageLinks=" + imageLinks + ", language=" + language + "]";
+    }
+
 
 }

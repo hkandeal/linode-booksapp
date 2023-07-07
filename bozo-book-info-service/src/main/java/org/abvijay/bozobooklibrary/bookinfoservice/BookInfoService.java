@@ -29,10 +29,10 @@ public class BookInfoService {
 	private static final Logger LOG = Logger.getLogger(BookInfoService.class);
 
 	@Inject
-    RedisClient redisClient;
+	RedisClient redisClient;
 
 	@Inject
-    MeterRegistry registry;
+	MeterRegistry registry;
 
 	@ConfigProperty(name = "book.info.service.google.book.api.url")
 	String GOOGLE_API_URL;
@@ -50,13 +50,13 @@ public class BookInfoService {
 		registry.counter("searchByKeyword() Counter", Tags.of("keyword", query)).increment();
 
 		try {
-			String url = GOOGLE_API_URL+"?q=" + query
+			String url = GOOGLE_API_URL + "?q=" + query
 					+ "&key=" + GOOGLE_API_KEY
-					+ "&maxResults="+MAX_RESULTS_PER_PAGE
-					+ "&startIndex="+ page*10;
+					+ "&maxResults=" + MAX_RESULTS_PER_PAGE
+					+ "&startIndex=" + page * 10;
 
-			LOG.info("Calling Google API with Query Key "+ query);
-			
+			LOG.info("Calling Google API with Query Key " + query);
+
 			HttpClient client = HttpClient.newHttpClient();
 			HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
 
@@ -66,24 +66,25 @@ public class BookInfoService {
 
 			ObjectMapper objMapper = new ObjectMapper();
 			resp = objMapper.readValue(responseJson, BookInfoSearchResponse.class);
-			LOG.info("Got the response with " + resp.getTotalItems()+ " records");
+			LOG.info("Got the response with " + resp.getTotalItems() + " records");
 
-			for(int i=0; i < resp.getTotalItems(); i++) {
-				System.out.println("index i"+ i);
+			System.out.println("resp total" + resp.getTotalItems());
+
+			for (int i = 0; i < resp.getTotalItems(); i++) {
+				//System.out.println("index i" + i);
 				BookItem item = resp.getItems().get(i);
-				System.out.println(i+" ==> item:"+item);
+				System.out.println(i + " ==> item:" + item.toString());
 				String itemJson = objMapper.writeValueAsString(item);
 				redisClient.set(Arrays.asList(item.getId(), itemJson));
 			}
 		} catch (Exception e) {
 			responseJson = "{'error', '" + e.getMessage() + "'}";
-			
+
 			LOG.error("Error: " + responseJson);
 			e.printStackTrace();
 		}
-		return  resp;    
+		return resp;
 	}
-
 
 	public BookInfoSearchResponse getBooks(List<String> bookids) {
 		BookInfoSearchResponse resp = new BookInfoSearchResponse();
@@ -92,25 +93,25 @@ public class BookInfoService {
 		String responseJson = "";
 		try {
 			ObjectMapper objMapper = new ObjectMapper();
-			for (int i=0; i < bookids.size(); i++) {
+			for (int i = 0; i < bookids.size(); i++) {
 
-				Response cachedItem  = redisClient.get(bookids.get(i));
-				if(cachedItem != null ) {
+				Response cachedItem = redisClient.get(bookids.get(i));
+				if (cachedItem != null) {
 					LOG.info("Found the record in Cache " + cachedItem.toString());
 					BookItem item = objMapper.readValue(cachedItem.toString(), BookItem.class);
 					items.add(item);
 				} else {
 					LOG.info("Could not find in the Cache");
-					
-					String url = GOOGLE_API_URL + "/"+ bookids.get(i)
-						+ "?key="+GOOGLE_API_KEY;
-					
-					LOG.info("Calling Google API with Query Key: "+ bookids.get(i));
+
+					String url = GOOGLE_API_URL + "/" + bookids.get(i)
+							+ "?key=" + GOOGLE_API_KEY;
+
+					LOG.info("Calling Google API with Query Key: " + bookids.get(i));
 
 					HttpClient client = HttpClient.newHttpClient();
 					HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
 					HttpResponse<String> response;
-					
+
 					response = client.send(request, BodyHandlers.ofString());
 					responseJson = response.body();
 
@@ -131,6 +132,6 @@ public class BookInfoService {
 		}
 		resp.setTotalItems(items.size());
 		resp.setItems(items);
-		return  resp;    
+		return resp;
 	}
 }
