@@ -70,7 +70,7 @@ public class BookInfoService {
 
 			System.out.println("resp total" + resp.getTotalItems());
 
-			for (int i = 0; i < resp.getTotalItems(); i++) {
+			for (int i = 0; i < Integer.parseInt(MAX_RESULTS_PER_PAGE) ; i++) {
 				//System.out.println("index i" + i);
 				BookItem item = resp.getItems().get(i);
 				System.out.println(i + " ==> item:" + item.toString());
