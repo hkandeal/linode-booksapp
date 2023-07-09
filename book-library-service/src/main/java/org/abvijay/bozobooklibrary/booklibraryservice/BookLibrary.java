@@ -32,5 +32,10 @@ public class BookLibrary extends PanacheEntityBase implements Serializable{
 		this.userID = userID;
 	}
 
+	@Override
+	public String toString() {
+		return "BookLibrary [bookID=" + bookID + ", userID=" + userID + "]";
+	}
+
     
 }
