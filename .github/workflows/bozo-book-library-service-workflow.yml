@@ -1,0 +1,126 @@
+# This workflow will build a docker container, publish it to IBM Container Registry, and deploy it to IKS when a release is created
+#
+# To configure this workflow:
+#
+# 1. Ensure that your repository contains a Dockerfile
+# 2. Setup secrets in your repository by going to settings: Create ICR_NAMESPACE and IBM_CLOUD_API_KEY
+# 3. Change the values for the IBM_CLOUD_REGION, REGISTRY_HOSTNAME, IMAGE_NAME, IKS_CLUSTER, DEPLOYMENT_NAME, and PORT
+
+name: Book Library Service
+on: 
+  push:
+    branches:
+      - main
+    paths:
+      - 'book-library-service/**'
+  
+  workflow_dispatch:
+    name:
+      description: 'Test scenario tags'  
+
+# Environment variables available to all jobs and steps in this workflow
+env:
+  GITHUB_SHA: ${{ github.sha }}
+  REGISTRY_HOSTNAME: docker.io
+  DOCKER_USERNAME: hossamgbm
+  IMAGE_NAME: bozo-book-library-service
+  PORT: 5001
+
+jobs:
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish, and Deploy
+    runs-on: ubuntu-latest
+    environment: development
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Generate build number
+      uses: einaregilsson/build-number@v3
+      with:
+        token: ${{secrets.github_token}}        
+
+    - name: Print new build number
+      run: echo "Build number is $BUILD_NUMBER"
+
+    - name: Starting Build & Push  Status Slack Notification
+      uses: ravsamhq/notify-slack-action@v2
+      if: always()
+      with:
+        status: ${{ job.status }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        notification_title: "Starting Build {BUILD_NUMBER}"
+        message_format: "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>"
+        footer: "Linked Repo <{repo_url}|{repo}> | <{workflow_url}|View Workflow>"
+        notify_when: "failure, success, warning"
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.GITOPS_SLACK_API }}
+
+
+    - name: Build with Native Image and Dockerizing it
+      run: |
+        cd book-library-service
+        ./mvnw package -Dnative
+        docker images
+        docker build -f Dockerfile.native -t $IMAGE_NAME:$BUILD_NUMBER .
+        docker images
+
+    - name: Build Status Slack Notification
+      uses: ravsamhq/notify-slack-action@v2
+      if: always()
+      with:
+        status: ${{ job.status }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        notification_title: "Build Status: {status_message}"
+        message_format: "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>"
+        footer: "Linked Repo <{repo_url}|{repo}> | <{workflow_url}|View Workflow>"
+        notify_when: "failure, success, warning"
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.GITOPS_SLACK_API }}
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: ${{secrets.DOCKERHUB_USERNAME}}
+        password: ${{secrets.DOCKERHUB_PASSWORD}}
+
+    - name: Push the image to Dockerhub
+      run: |
+        docker image tag $IMAGE_NAME:$BUILD_NUMBER docker.io/$DOCKER_USERNAME/$IMAGE_NAME:$BUILD_NUMBER
+        docker image push docker.io/$DOCKER_USERNAME/$IMAGE_NAME:$BUILD_NUMBER
+
+    - name: BuiDocker Build & Push  Status Slack Notification
+      uses: ravsamhq/notify-slack-action@v2
+      if: always()
+      with:
+        status: ${{ job.status }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        notification_title: "Docker Build & Push Status: {status_message}"
+        message_format: "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>"
+        footer: "Linked Repo <{repo_url}|{repo}> | <{workflow_url}|View Workflow>"
+        notify_when: "failure, success, warning"
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.GITOPS_SLACK_API }}
+   
+    - name: Invoke book-library-service Infra GitOps pipe
+      run: |
+          curl -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Authorization: token ${{secrets.API_TOKEN_GITHUB}}" \
+          -H "Content-Type: application/json" \
+          --request POST \
+          --data '{"event_type": "update-book-library-service-build-number", "client_payload": { "buildnumber": "'"$BUILD_NUMBER"'" }}' \
+          https://api.github.com/repos/hkandeal/linode-booksinfra/dispatches
+
+    - name: Invoked Infra Workflow Slack Notification
+      uses: ravsamhq/notify-slack-action@v2
+      if: always()
+      with:
+        status: ${{ job.status }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        notification_title: "Infra Workflow trigger Status: {status_message}"
+        message_format: "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>"
+        footer: "Linked Repo <{repo_url}|{repo}> | <{workflow_url}|View Workflow>"
+        notify_when: "failure, success, warning"
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.GITOPS_SLACK_API }}
