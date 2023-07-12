@@ -12,7 +12,7 @@ import Library from './Library';
 import {CurrentUserContext} from './CurrentUserContext';
 
 
-/*tracing.js*/
+/*tracing.js
 const opentelemetry = require("@opentelemetry/sdk-node");
 const {
   getNodeAutoInstrumentations,
@@ -36,7 +36,7 @@ const sdk = new opentelemetry.NodeSDK({
   }),
   instrumentations: [getNodeAutoInstrumentations()],
 });
-//sdk.start();
+sdk.start();*/
 
 
 
