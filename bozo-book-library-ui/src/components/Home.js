@@ -42,7 +42,7 @@ sdk.start();*/
 
 const Home = () => {
     const { user } = useContext(CurrentUserContext);
-    print(process.env.TRACE_BACKEND_ENDPOINT);
+    //print(process.env.TRACE_BACKEND_ENDPOINT);
     return(
         <div className="App">
         {user ? (
