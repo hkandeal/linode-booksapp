@@ -36,7 +36,7 @@ const sdk = new opentelemetry.NodeSDK({
   }),
   instrumentations: [getNodeAutoInstrumentations()],
 });
-sdk.start();
+//sdk.start();
 
 
 
