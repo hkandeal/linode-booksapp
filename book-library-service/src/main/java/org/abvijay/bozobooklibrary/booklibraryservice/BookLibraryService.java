@@ -19,7 +19,7 @@ import org.eclipse.microprofile.opentracing.Traced;
 import org.jboss.logging.Logger;
 
 @Traced
-@Path("/booklib")
+//@Path("/booklib")
 public class BookLibraryService {
     
     private static final Logger LOG = Logger.getLogger(BookLibraryService.class);
