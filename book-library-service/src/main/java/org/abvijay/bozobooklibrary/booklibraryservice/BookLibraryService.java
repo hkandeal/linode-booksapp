@@ -32,7 +32,8 @@ public class BookLibraryService {
     @Produces(APPLICATION_JSON)
     public List<BookLibrary> getBooksforUser(@QueryParam("userId") String userId) {
 
-        List<BookLibrary> books = BookLibrary.listAll();
+        
+        List<BookLibrary> books = BookLibrary.find("userId", userId).list();
         return books;
     }
 
