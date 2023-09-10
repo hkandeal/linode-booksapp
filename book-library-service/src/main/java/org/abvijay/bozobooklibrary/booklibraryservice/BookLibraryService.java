@@ -19,7 +19,7 @@ import org.eclipse.microprofile.opentracing.Traced;
 import org.jboss.logging.Logger;
 
 @Traced
-//@Path("/booklib")
+@Path("/")
 public class BookLibraryService {
     
     private static final Logger LOG = Logger.getLogger(BookLibraryService.class);
@@ -28,7 +28,7 @@ public class BookLibraryService {
     MeterRegistry registry;
 
     @GET
-    @Path("/get/{userId}")
+    @Path("get/{userId}")
     @Produces(APPLICATION_JSON)
     public List<BookLibrary> getBooksforUser(@QueryParam("userId") String userId) {
 
