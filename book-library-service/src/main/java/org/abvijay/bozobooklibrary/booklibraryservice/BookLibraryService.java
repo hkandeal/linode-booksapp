@@ -33,8 +33,9 @@ public class BookLibraryService {
     @Path("get/{userId}")
     @Produces(APPLICATION_JSON)
     public List<BookLibrary> getBooksforUser(@QueryParam("userId") String userId) {
-        List<BookLibrary> books = BookLibrary.find("from BookLibrary pl where pl.userID = ?1", userId
-        ).list();
+        LOG.info("Get Books for User:" + userId);
+        List<BookLibrary> books = BookLibrary.find("userID", userId).list();
+        LOG.info("Returned Books:" + books.toString());
         return books;
     }
 
@@ -47,7 +48,7 @@ public class BookLibraryService {
             LOG.info("Adding Book UserId " + userId + " bookId " + bookId);
             book.setBookID(bookId);
             book.setUserID(userId);
-            System.out.println("UserId " + book.getUserID() + " bookId " + book.getBookID());
+            //System.out.println("UserId " + book.getUserID() + " bookId " + book.getBookID());
             book.persist();
             return Response.ok("success", MediaType.TEXT_PLAIN).build();
         } catch (Exception e) {
@@ -65,15 +66,15 @@ public class BookLibraryService {
         try {
 
             LOG.info("Deleting UserId " + userId + " bookId " + bookId);
-            //BookLibrary book = new BookLibrary();
-            //Map<String, String> params = new HashMap<>();
-            //params.put("userID", userId);
-            //params.put("bookID", bookId);
-            //book.setBookID(bookId);
-            //book.setUserID(userId);
-            //book.delete();
+            // BookLibrary book = new BookLibrary();
+            // Map<String, String> params = new HashMap<>();
+            // params.put("userID", userId);
+            // params.put("bookID", bookId);
+            // book.setBookID(bookId);
+            // book.setUserID(userId);
+            // book.delete();
 
-             BookLibrary.delete("delete from BookLibrary pl where pl.bookID =  ?1" , bookId );
+            BookLibrary.delete("delete from BookLibrary pl where pl.bookID =  ?1", bookId);
 
             return Response.ok("success", MediaType.TEXT_PLAIN).build();
         } catch (Exception e) {
