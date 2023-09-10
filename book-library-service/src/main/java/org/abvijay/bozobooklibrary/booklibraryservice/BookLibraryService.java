@@ -73,7 +73,7 @@ public class BookLibraryService {
             //book.setUserID(userId);
             //book.delete();
 
-             BookLibrary.delete("delete from booklibrary pl where pl.bookid =  ?1" , bookId );
+             BookLibrary.delete("delete from BookLibrary pl where pl.bookid =  ?1" , bookId );
 
             return Response.ok("success", MediaType.TEXT_PLAIN).build();
         } catch (Exception e) {
