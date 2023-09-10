@@ -32,7 +32,7 @@ public class BookLibraryService {
     @GET
     @Path("get/{userId}")
     @Produces(APPLICATION_JSON)
-    public List<BookLibrary> getBooksforUser(@QueryParam("userId") String userId) {
+    public List<BookLibrary> getBooksforUser(@PathParam("userId") String userId) {
         LOG.info("Get Books for User:" + userId);
         List<BookLibrary> books = BookLibrary.find("userID", userId).list();
         LOG.info("Returned Books:" + books.toString());
