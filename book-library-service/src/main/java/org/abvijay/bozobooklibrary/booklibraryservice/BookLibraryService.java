@@ -1,6 +1,8 @@
 package org.abvijay.bozobooklibrary.booklibraryservice;
 
 import io.micrometer.core.instrument.MeterRegistry;
+import io.quarkus.panache.common.Parameters;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +33,8 @@ public class BookLibraryService {
     @Path("get/{userId}")
     @Produces(APPLICATION_JSON)
     public List<BookLibrary> getBooksforUser(@QueryParam("userId") String userId) {
-        List<BookLibrary> books = BookLibrary.find("select * from booklibrary where userid = ?", userId).list();
+        List<BookLibrary> books = BookLibrary.find("select * from booklibrary pl where pl.userid = :userid", 
+        Parameters.with("userid", userId)).list();
         return books;
     }
 
@@ -70,7 +73,7 @@ public class BookLibraryService {
             //book.setUserID(userId);
             //book.delete();
 
-             BookLibrary.delete("delete from booklibrary where bookid = " , bookId );
+             BookLibrary.delete("delete from booklibrary pl where pl.bookid =  ?1" , bookId );
 
             return Response.ok("success", MediaType.TEXT_PLAIN).build();
         } catch (Exception e) {
