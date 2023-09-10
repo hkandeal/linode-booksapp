@@ -33,7 +33,7 @@ public class BookLibraryService {
     @Path("get/{userId}")
     @Produces(APPLICATION_JSON)
     public List<BookLibrary> getBooksforUser(@QueryParam("userId") String userId) {
-        List<BookLibrary> books = BookLibrary.find("select * from booklibrary pl where pl.userid = :userid", 
+        List<BookLibrary> books = BookLibrary.find("select * from BookLibrary pl where pl.userID = :userid", 
         Parameters.with("userid", userId)).list();
         return books;
     }
@@ -73,7 +73,7 @@ public class BookLibraryService {
             //book.setUserID(userId);
             //book.delete();
 
-             BookLibrary.delete("delete from BookLibrary pl where pl.bookid =  ?1" , bookId );
+             BookLibrary.delete("delete from BookLibrary pl where pl.bookID =  ?1" , bookId );
 
             return Response.ok("success", MediaType.TEXT_PLAIN).build();
         } catch (Exception e) {
