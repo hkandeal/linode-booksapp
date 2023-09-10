@@ -33,8 +33,8 @@ public class BookLibraryService {
     @Path("get/{userId}")
     @Produces(APPLICATION_JSON)
     public List<BookLibrary> getBooksforUser(@QueryParam("userId") String userId) {
-        List<BookLibrary> books = BookLibrary.find("select * from BookLibrary pl where pl.userID = :userid", 
-        Parameters.with("userid", userId)).list();
+        List<BookLibrary> books = BookLibrary.find("from BookLibrary pl where pl.userID = ?1", userId
+        ).list();
         return books;
     }
 
