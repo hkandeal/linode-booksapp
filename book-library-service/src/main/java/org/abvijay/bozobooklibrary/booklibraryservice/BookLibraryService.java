@@ -31,9 +31,7 @@ public class BookLibraryService {
     @Path("get/{userId}")
     @Produces(APPLICATION_JSON)
     public List<BookLibrary> getBooksforUser(@QueryParam("userId") String userId) {
-
-        
-        List<BookLibrary> books = BookLibrary.find("userId", userId).list();
+        List<BookLibrary> books = BookLibrary.find("select from booklibrary where userid in ?", userId).list();
         return books;
     }
 
@@ -64,14 +62,15 @@ public class BookLibraryService {
         try {
 
             LOG.info("Deleting UserId " + userId + " bookId " + bookId);
-            BookLibrary book = new BookLibrary();
-            Map<String, String> params = new HashMap<>();
-            params.put("userID", userId);
-            params.put("bookID", bookId);
-            book.setBookID(bookId);
-            book.setUserID(userId);
-            book.delete();
-            // BookLibrary.delete("userID = :userID and bookID = :bookID", params);
+            //BookLibrary book = new BookLibrary();
+            //Map<String, String> params = new HashMap<>();
+            //params.put("userID", userId);
+            //params.put("bookID", bookId);
+            //book.setBookID(bookId);
+            //book.setUserID(userId);
+            //book.delete();
+
+             BookLibrary.delete("delete from booklibrary where bookid in ?" , bookId );
 
             return Response.ok("success", MediaType.TEXT_PLAIN).build();
         } catch (Exception e) {
