@@ -21,7 +21,7 @@ import org.jboss.logging.Logger;
 @Traced
 @Path("/")
 public class BookLibraryService {
-    
+
     private static final Logger LOG = Logger.getLogger(BookLibraryService.class);
 
     @Inject
@@ -49,8 +49,9 @@ public class BookLibraryService {
             book.persist();
             return Response.ok("success", MediaType.TEXT_PLAIN).build();
         } catch (Exception e) {
-            Response responseJson = Response.serverError().type(MediaType.APPLICATION_JSON).entity("{" + e.getMessage() + "}").build();
-			LOG.error("Error: " + responseJson);
+            Response responseJson = Response.serverError().type(MediaType.APPLICATION_JSON)
+                    .entity("{" + e.getMessage() + "}").build();
+            LOG.error("Error: " + responseJson);
             return responseJson;
         }
     }
@@ -62,17 +63,20 @@ public class BookLibraryService {
         try {
 
             LOG.info("Deleting UserId " + userId + " bookId " + bookId);
-
-            Map<String,String> params=new HashMap<>();
-            params.put("userID",userId);
-            params.put("bookID",bookId);
-
-            BookLibrary.delete("userID = :userID and bookID = :bookID", params);
+            BookLibrary book = new BookLibrary();
+            Map<String, String> params = new HashMap<>();
+            params.put("userID", userId);
+            params.put("bookID", bookId);
+            book.setBookID(bookId);
+            book.setUserID(userId);
+            book.delete();
+            // BookLibrary.delete("userID = :userID and bookID = :bookID", params);
 
             return Response.ok("success", MediaType.TEXT_PLAIN).build();
         } catch (Exception e) {
-            Response responseJson = Response.serverError().type(MediaType.APPLICATION_JSON).entity("{" + e.getMessage() + "}").build();
-			LOG.error("Error: " + responseJson);
+            Response responseJson = Response.serverError().type(MediaType.APPLICATION_JSON)
+                    .entity("{" + e.getMessage() + "}").build();
+            LOG.error("Error: " + responseJson);
             return responseJson;
         }
     }
